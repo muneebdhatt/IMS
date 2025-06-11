@@ -1,0 +1,79 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% tailwind_css %}
+    <title>Create Order - IMS</title>
+</head>
+<body class="bg-gray-50 font-serif leading-normal tracking-normal">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-8">Create New Order</h1>
+            
+            <form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {% csrf_token %}
+                
+                <!-- Customer Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="customer">
+                        Select Customer
+                    </label>
+                    <select name="customer" id="customer" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="">Choose a customer...</option>
+                        {% for customer in customers %}
+                        <option value="{{ customer.id }}">{{ customer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Products Table -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Products</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="py-2 px-4 text-left">Product</th>
+                                    <th class="py-2 px-4 text-left">Price</th>
+                                    <th class="py-2 px-4 text-left">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr class="border-b">
+                                    <td class="py-2 px-4">{{ product.name }}</td>
+                                    <td class="py-2 px-4">${{ product.price }}</td>
+                                    <td class="py-2 px-4">
+                                        <input type="number" 
+                                               name="quantity_{{ product.id }}" 
+                                               min="0" 
+                                               value="0"
+                                               class="shadow appearance-none border rounded w-20 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between">
+                    <button type="submit" 
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Create Order
+                    </button>
+                    <a href="{% url 'index' %}" 
+                       class="text-blue-500 hover:text-blue-700">
+                        Back to Home
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
